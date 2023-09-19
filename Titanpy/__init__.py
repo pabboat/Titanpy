@@ -80,8 +80,10 @@ class Titanpy:
         else:
             pass
 
-b = Titanpy()
 
-b.Connect(cred_path="./credentials/servicetitan_credentials.json")
+if __name__ == "__main__":
+    b = Titanpy()
 
-print(b.Get(endpoint = 'jobs'))
+    b.Connect(cred_path="./credentials/servicetitan_credentials.json")
+
+    print(b.Get(endpoint = 'jobs'))
