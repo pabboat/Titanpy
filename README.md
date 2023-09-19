@@ -1,2 +1,6 @@
 # Titanpy
-Python utility for interacting with servicetitan's apis
+
+Python class for interacting with all Servicetitan's api endpoints
+
+Windows install:
+py -m pip install --upgrade Titanpy
