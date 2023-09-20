@@ -1,6 +1,6 @@
 
-def get(credentials, endpoint, query, id, *args, **kwargs):
-
+def get_request(credentials, query, url):
+    
     import requests
 
     auth = {
@@ -8,41 +8,105 @@ def get(credentials, endpoint, query, id, *args, **kwargs):
         "Authorization": credentials["ACCESS_TOKEN"]
     }
 
+    default_query_parameters = {
+    }
+    if query != None:
+        for request in query:
+            default_query_parameters[request] = query[request]
+    try:
+        request = requests.get(url=url,params=default_query_parameters, headers=auth)
+        return request.json()
+    except Exception as e:
+        print(f"There was an error getting data from {url}")
+        print(e)
+
+def get(credentials, endpoint, query, id, *args, **kwargs):
+
+    general_urls = {
+        "url": "https://api.servicetitan.io/",
+        "jpm_url": "https://api.servicetitan.io/jpm/v2/",
+        "jpm_url_tenant": f"https://api.servicetitan.io/jpm/v2/tenant/{credentials['TENANT_ID']}",
+        "accounting_url_tenant": f"https://api.servicetitan.io/accounting/v2/tenant/{credentials['TENANT_ID']}/",
+    }
+
+    # --------- ENDPOINT GROUPS --------- #
+
+    # Accounting
+    accounting_endpoints = [
+        'export/inventory-bills',
+        'export/invoice-items',
+        'export/invoices',
+        'export/payments',
+        'ap-credits',
+        'ap-payments',
+        'inventory-bills',
+        'invoices',
+        'journal-entries',
+        'payments',
+        'payment-terms',
+        'tax-zones',
+    ]
+    accounting_id_endpoints = [
+        'journal-entries-details/',
+        'journal-entries-summary/',
+        'payment-types/',
+    ]
+
+    # --------- AVAILABLE ENDPOINTS --------- #
+
     available_endpoints = [
         'jobs',
     ]
+    available_endpoint_groups = [
+        accounting_endpoints,
+        accounting_id_endpoints,
+    ]
+    for group in available_endpoint_groups:
+        available_endpoints.extend(group)
+
+    # --------- ENDPOINT TESTS --------- #
 
     # Tests if endpoint has been manually added or not.
     if endpoint in available_endpoints:
 
+        # Accounting Endpoints
+
+        if endpoint in accounting_endpoints:
+            url = f"{general_urls['accounting_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+
+        if endpoint in accounting_id_endpoints:
+            if endpoint == 'journal-entries-details/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}journal-entries/{id}/details"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint == 'journal-entries-summary/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}journal-entries/{id}/summary"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint == 'payment-types/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}payment-types/{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
         # jobs
         if endpoint == 'jobs':
-            url = f"https://api.servicetitan.io/jpm/v2/tenant/{credentials['TENANT_ID']}/jobs"
-            default_query_parameters = {
-                "pageSize": 50,
-            }
-            if query != None:
-                for request in query:
-                    default_query_parameters[request] = query[request]
-            try:
-                request = requests.get(url=url,params=default_query_parameters, headers=auth)
-                return request.json()
-            except Exception as e:
-                print(f"There was an error getting data from {endpoint}")
-                print(e)
+            url = f"{general_urls['jpm_url_tenant']}/jobs"
+            return get_request(credentials, query, url)
+
 
     # Attempts to make a request to a general endpoint if it has not been manually added
+    # TO-DO AI assisted url creation
     else:
         try:
             url = f"https://api.servicetitan.io/jpm/v2/tenant/{credentials['TENANT_ID']}/{endpoint}"
-            default_query_parameters = {
-            "pageSize": 50,
-            }
-            if query != None:
-                for request in query:
-                    default_query_parameters[request] = query[request]
-            request = requests.get(url=url,params=default_query_parameters, headers=auth)
-            return request.json()
+            return get_request(credentials, query, url)
         except Exception as e:
             print(f"There was an error getting data from {endpoint}. The endpoint was not found in our current available\
                   endpoint list and could not be interpretted automatically. Please submit a request for this endpoint.")
@@ -51,10 +115,10 @@ def get(credentials, endpoint, query, id, *args, **kwargs):
 
     # --------------------------------- Endpoint List ---------------------------------
     # ---- Accounting ----
-    # inventory-bills
-    # invoice-items
+    # export/inventory-bills
+    # export/invoice-items
     # export/invoices
-    # payments
+    # export/payments
     # ap-credits
     # ap-payments
     # inventory-bills

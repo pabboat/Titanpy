@@ -37,16 +37,21 @@ class Titanpy:
 
     # Returns data from a source.
     # Use Connect() before using API methods.
-    def Get(self, endpoint, query = None, id=None, *args, **kwargs):
+    def Get(self, endpoint=None, query = None, id=None, url=None, *args, **kwargs):
 
         if self.access_token == None:
             print("No proper connection. Please ensure Connect method has been run successfully.")
-
-        else:
+        elif url !=None:
+            from get import get_request
+            print(f"Url received. Requesting from url ({url}).")
+            return get_request(credentials = self.credentials, query=query, url=url)
+        elif endpoint !=None:
             from get import get
+            print(f"Endpoint received. Requesting for endpoint ({endpoint})")
             data = get(credentials = self.credentials, endpoint = endpoint, query = query, id=id)
             return data
-
+        else:
+            print("No endpoint or url has been entered. Please enter an endpoint or a url.")
 
     def Post(self):
 
@@ -54,7 +59,7 @@ class Titanpy:
             print("No proper connection. Please ensure Connect method has been run successfully.")
 
         else:
-            pass
+            print("This method has not been coded yet. See https://github.com/pabboat/Titanpy for more information.")
 
     def Del(self):
 
@@ -62,7 +67,7 @@ class Titanpy:
             print("No proper connection. Please ensure Connect method has been run successfully.")
 
         else:
-            pass
+            print("This method has not been coded yet. See https://github.com/pabboat/Titanpy for more information.")
 
     def Put(self):
 
@@ -70,7 +75,7 @@ class Titanpy:
             print("No proper connection. Please ensure Connect method has been run successfully.")
 
         else:
-            pass
+            print("This method has not been coded yet. See https://github.com/pabboat/Titanpy for more information.")
 
     def Patch(self):
 
@@ -78,7 +83,7 @@ class Titanpy:
             print("No proper connection. Please ensure Connect method has been run successfully.")
 
         else:
-            pass
+            print("This method has not been coded yet. See https://github.com/pabboat/Titanpy for more information.")
 
 
 if __name__ == "__main__":
@@ -86,4 +91,4 @@ if __name__ == "__main__":
 
     b.Connect(cred_path="./credentials/servicetitan_credentials.json")
 
-    print(b.Get(endpoint = 'jobs'))
+    print(b.Get(endpoint = 'tax-zones'))
