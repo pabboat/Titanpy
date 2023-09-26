@@ -37,7 +37,7 @@ class Titanpy:
 
     # Returns data from a source.
     # Use Connect() before using API methods.
-    def Get(self, endpoint=None, query = None, id=None, url=None, *args, **kwargs):
+    def Get(self, endpoint=None, query = None, id=None, category=None, url=None, *args, **kwargs):
 
         if self.access_token == None:
             print("No proper connection. Please ensure Connect method has been run successfully.")
@@ -48,8 +48,7 @@ class Titanpy:
         elif endpoint !=None:
             from get import get
             print(f"Endpoint received. Requesting for endpoint ({endpoint})")
-            data = get(credentials = self.credentials, endpoint = endpoint, query = query, id=id)
-            return data
+            return get(credentials = self.credentials, endpoint = endpoint, query = query, id=id, category=category)
         else:
             print("No endpoint or url has been entered. Please enter an endpoint or a url.")
 
@@ -91,4 +90,4 @@ if __name__ == "__main__":
 
     b.Connect(cred_path="./credentials/servicetitan_credentials.json")
 
-    print(b.Get(endpoint = 'tax-zones'))
+    print(b.Get(endpoint = 'forms'))

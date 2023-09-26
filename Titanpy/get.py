@@ -20,13 +20,15 @@ def get_request(credentials, query, url):
         print(f"There was an error getting data from {url}")
         print(e)
 
-def get(credentials, endpoint, query, id, *args, **kwargs):
+def get(credentials, endpoint, query, id, category, *args, **kwargs):
 
     general_urls = {
         "url": "https://api.servicetitan.io/",
         "jpm_url": "https://api.servicetitan.io/jpm/v2/",
         "jpm_url_tenant": f"https://api.servicetitan.io/jpm/v2/tenant/{credentials['TENANT_ID']}",
         "accounting_url_tenant": f"https://api.servicetitan.io/accounting/v2/tenant/{credentials['TENANT_ID']}/",
+        "reporting_url_tenant": f"https://api.servicetitan.io/reporting/v2/tenant/{credentials['TENANT_ID']}/",
+        "forms_url_tenant":f"https://api.servicetitan.io/forms/v2/tenant/{credentials['TENANT_ID']}/",
     }
 
     # --------- ENDPOINT GROUPS --------- #
@@ -52,6 +54,23 @@ def get(credentials, endpoint, query, id, *args, **kwargs):
         'payment-types/',
     ]
 
+    # Forms
+    forms_endpoints = [
+        'forms',
+        'submissions',
+    ]
+
+
+    # Reporting
+    reporting_endpoints = [
+        'report-categories',
+    ]
+    reporting_id_endpoints = [
+        'dynamic-value-sets/',
+        '/reports',
+        '/reports/',
+    ]
+
     # --------- AVAILABLE ENDPOINTS --------- #
 
     available_endpoints = [
@@ -60,6 +79,9 @@ def get(credentials, endpoint, query, id, *args, **kwargs):
     available_endpoint_groups = [
         accounting_endpoints,
         accounting_id_endpoints,
+        reporting_endpoints,
+        reporting_id_endpoints,
+        forms_endpoints,
     ]
     for group in available_endpoint_groups:
         available_endpoints.extend(group)
@@ -94,6 +116,38 @@ def get(credentials, endpoint, query, id, *args, **kwargs):
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+        
+        # Forms Endpoints
+        
+        if endpoint in forms_endpoints:
+            url = f"{general_urls['forms_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+
+        # Reporting Endpoints
+
+        if endpoint in reporting_endpoints:
+            url = f"{general_urls['reporting_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+        
+        if endpoint in reporting_id_endpoints:
+            if endpoint == 'dynamic-value-sets/':
+                if id != None:
+                    url = f"{general_urls['reporting_url_tenant']}dynamic-value-sets/{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint == '/reports':
+                if category != None:
+                    url = f"{general_urls['reporting_url_tenant']}report-category/{category}/reports"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint == '/reports/':
+                if id != None and category != None:
+                    url = f"{general_urls['reporting_url_tenant']}report-category/{category}/reports/{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
 
         # jobs
         if endpoint == 'jobs':
