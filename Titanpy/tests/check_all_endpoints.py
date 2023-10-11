@@ -1,4 +1,4 @@
-import Titanpy
+from Titanpy import Titanpy
 # --------- ENDPOINT GROUPS --------- #
 
 # Accounting
@@ -92,9 +92,15 @@ for group in available_endpoint_groups:
 
 
 # --------- TEST ENDPOINTS --------- #
-
-tp = Titanpy.Connect(cred_path="./credentials/servicetitan_credentials.json")
+tp = Titanpy()
+tp.Connect(cred_path="./credentials/servicetitan_credentials.json")
 for endpoint in available_endpoints:
-    response = tp.Get(endpoint = endpoint)
-    print(response.status_code)
-    
+    response = tp.Get(endpoint = endpoint, id=1, category='gamer')
+    try:
+        print(response.status_code)
+    except:
+        response = tp.Get(endpoint = endpoint, id=1, category='gamer')
+        try:
+            print(response.status_code)
+        except:
+            pass

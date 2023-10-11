@@ -183,7 +183,7 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
                 else:
                     print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
 
-            if endpoint == '/booking-contacts/':
+            if endpoint == '/bookings-contacts/':
                 if category != None and id != None:
                     url = f"{general_urls['accounting_url_tenant']}{category}/bookings/{id}/contacts"
                     return get_request(credentials,query,url)
