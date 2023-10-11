@@ -15,7 +15,7 @@ def get_request(credentials, query, url):
             default_query_parameters[request] = query[request]
     try:
         request = requests.get(url=url,params=default_query_parameters, headers=auth)
-        return request.json()
+        return request
     except Exception as e:
         print(f"There was an error getting data from {url}")
         print(e)
@@ -29,6 +29,7 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         "accounting_url_tenant": f"https://api.servicetitan.io/accounting/v2/tenant/{credentials['TENANT_ID']}/",
         "reporting_url_tenant": f"https://api.servicetitan.io/reporting/v2/tenant/{credentials['TENANT_ID']}/",
         "forms_url_tenant":f"https://api.servicetitan.io/forms/v2/tenant/{credentials['TENANT_ID']}/",
+        "crm_url_tenant":f"https://api.servicetitan.io/crm/v2/tenant/{credentials['TENANT_ID']}/",
     }
 
     # --------- ENDPOINT GROUPS --------- #
@@ -52,6 +53,40 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         'journal-entries-details/',
         'journal-entries-summary/',
         'payment-types/',
+    ]
+
+    # CRM
+    crm_endpoints = [
+        'export/bookings',
+        'export/customers',
+        'export/customers/contacts',
+        'export/leads',
+        'export/locations',
+        'export/locations/contacts',
+        'booking-provider-tags',
+        'bookings',
+        'customers',
+        'customers/contacts',
+        'leads',
+        'locations',
+        'locations/contacts',
+    ]
+
+    crm_id_endpoints = [
+        'booking-provider-tags/',
+        '/bookings',
+        '/bookings/',
+        '/bookings-contacts/',
+        'bookings/',
+        'bookings-contacts/',
+        'customers/',
+        'customers-contacts/',
+        'customers-notes/',
+        'leads/',
+        'leads-notes/',
+        'locations/',
+        'locations-contacts/',
+        'locations-notes/',
     ]
 
     # Forms
@@ -82,6 +117,8 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         reporting_endpoints,
         reporting_id_endpoints,
         forms_endpoints,
+        crm_endpoints,
+        crm_id_endpoints,
     ]
     for group in available_endpoint_groups:
         available_endpoints.extend(group)
@@ -117,6 +154,84 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
         
+        # CRM Endpoints
+        
+        if endpoint in crm_endpoints:
+            url = f"{general_urls['crm_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+
+        if endpoint in crm_id_endpoints:
+            
+            if endpoint in ['booking-provider-tags/', 'bookings/', 'customers/','leads/','locations/']:
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+            if endpoint in ['/bookings']:
+                if category != None:
+                    url = f"{general_urls['accounting_url_tenant']}{category}{endpoint}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an Category in order to run. Please enter category as an arg.")
+            
+            if endpoint in ['/bookings/',]:
+                if category != None and id != None:
+                    url = f"{general_urls['accounting_url_tenant']}{category}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
+
+            if endpoint == '/booking-contacts/':
+                if category != None and id != None:
+                    url = f"{general_urls['accounting_url_tenant']}{category}/bookings/{id}/contacts"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
+
+            if endpoint == 'bookings-contacts/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}bookings/{id}/contacts"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+            if endpoint == 'customers-contacts/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}customers/{id}/contacts"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+            if endpoint == 'customers-notes/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}customers/{id}/notes"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+            if endpoint == 'leads-notes/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}leads/{id}/notes"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+            if endpoint == 'locations-contacts/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}locations/{id}/contacts"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+            if endpoint == 'locations-notes/':
+                if id != None:
+                    url = f"{general_urls['accounting_url_tenant']}locations/{id}/notes"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
         # Forms Endpoints
         
         if endpoint in forms_endpoints:
@@ -141,7 +256,7 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
                     url = f"{general_urls['reporting_url_tenant']}report-category/{category}/reports"
                     return get_request(credentials,query,url)
                 else:
-                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+                    print("The requested endpoint requires an Category in order to run. Please enter category as an arg.")
             if endpoint == '/reports/':
                 if id != None and category != None:
                     url = f"{general_urls['reporting_url_tenant']}report-category/{category}/reports/{id}"
@@ -168,7 +283,7 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
 
 
     # --------------------------------- Endpoint List ---------------------------------
-    # ---- Accounting ----
+    # ---- Accounting ---- done
     # export/inventory-bills
     # export/invoice-items
     # export/invoices

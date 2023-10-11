@@ -41,14 +41,14 @@ class Titanpy:
 
         if self.access_token == None:
             print("No proper connection. Please ensure Connect method has been run successfully.")
-        elif url !=None:
-            from get import get_request
-            print(f"Url received. Requesting from url ({url}).")
-            return get_request(credentials = self.credentials, query=query, url=url)
         elif endpoint !=None:
             from get import get
             print(f"Endpoint received. Requesting for endpoint ({endpoint})")
             return get(credentials = self.credentials, endpoint = endpoint, query = query, id=id, category=category)
+        elif url !=None:
+            from get import get_request
+            print(f"Url received. Requesting from url ({url}).")
+            return get_request(credentials = self.credentials, query=query, url=url)
         else:
             print("No endpoint or url has been entered. Please enter an endpoint or a url.")
 
