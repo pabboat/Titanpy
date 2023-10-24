@@ -90,4 +90,4 @@ if __name__ == "__main__":
 
     b.Connect(cred_path="./credentials/servicetitan_credentials.json")
 
-    print(b.Get(endpoint = 'forms'))
+    print(b.Get(endpoint = 'receipts'))

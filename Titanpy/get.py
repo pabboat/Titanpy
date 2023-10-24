@@ -24,12 +24,16 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
 
     general_urls = {
         "url": "https://api.servicetitan.io/",
-        "jpm_url": "https://api.servicetitan.io/jpm/v2/",
-        "jpm_url_tenant": f"https://api.servicetitan.io/jpm/v2/tenant/{credentials['TENANT_ID']}",
         "accounting_url_tenant": f"https://api.servicetitan.io/accounting/v2/tenant/{credentials['TENANT_ID']}/",
         "reporting_url_tenant": f"https://api.servicetitan.io/reporting/v2/tenant/{credentials['TENANT_ID']}/",
         "forms_url_tenant":f"https://api.servicetitan.io/forms/v2/tenant/{credentials['TENANT_ID']}/",
         "crm_url_tenant":f"https://api.servicetitan.io/crm/v2/tenant/{credentials['TENANT_ID']}/",
+        "dispatch_url_tenant":f"https://api.servicetitan.io/dispatch/v2/tenant/{credentials['TENANT_ID']}/",
+        "installed_systems_url_tenant":f"https://api.servicetitan.io/equipmentsystems/v2/tenant/{credentials['TENANT_ID']}/",
+        "inventory_url_tenant":f"https://api.servicetitan.io/inventory/v2/tenant/{credentials['TENANT_ID']}/",
+        "job_booking_url_tenant":f"https://api.servicetitan.io/jbce/v2/tenant/{credentials['TENANT_ID']}/",
+        "job_planning_url_tenant": f"https://api.servicetitan.io/jpm/v2/tenant/{credentials['TENANT_ID']}/",
+
     }
 
     # --------- ENDPOINT GROUPS --------- #
@@ -71,7 +75,6 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         'locations',
         'locations/contacts',
     ]
-
     crm_id_endpoints = [
         'booking-provider-tags/',
         '/bookings',
@@ -89,12 +92,88 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         'locations-notes/',
     ]
 
+    # Dispatch
+    dispatch_endpoints = [
+        'export/appointment-assignments',
+        'appointment_assignments',
+        'non-job-appointments',
+        'teams',
+        'technician-shifts',
+        'zones',
+    ]
+    dispatch_id_endpoints = [
+        'non-job-appointments/',
+        'teams/',
+        'technician-shifts/',
+        'zones/',
+    ]
+
+    # Installed Systems
+    installed_systems_endpoints = [
+        'installed-equipment',
+    ]
+    installed_systems_id_endpoints = [
+        'installed-equipment/',
+    ]
+
     # Forms
     forms_endpoints = [
         'forms',
         'submissions',
     ]
 
+    # Inventory
+    inventory_endpoints = [
+        'export/purchase-orders',
+        'adjustments',
+        'purchase-orders',
+        'purchase-order-markups',
+        'purchase-order-types',
+        'receipts',
+        'returns',
+        'transfers',
+        'trucks',
+        'vendors',
+        'warehouses',
+    ]
+    inventory_id_endpoints = [
+        'purchase-orders/',
+        'purchase-order-markups/',
+        'vendors/',
+    ]
+
+    # Job Booking
+    job_booking_endpoints = [
+        'call-reasons',
+    ]
+
+    # Job Planning and Management
+    job_planning_endpoints = [
+        'export/appointments',
+        'export/job-canceled-logs',
+        'export/jobs',
+        'export/projects',
+        'appointments',
+        'job-cancel-reasons',
+        'job-hold-reasons',
+        'jobs',
+        'job-types',
+        'projects',
+        'project-statuses',
+        'project-substatuses',
+    ]
+    job_planning_id_endpoints = [
+        'appointments/',
+        'jobs-cancel-reasons/',
+        'jobs/',
+        'jobs-history/',
+        'jobs-notes/',
+        'job-types/',
+        'projects/',
+        'projects-notes/',
+        'project-statuses/'
+        'project-substatuses/',
+    ]
 
     # Reporting
     reporting_endpoints = [
@@ -109,16 +188,23 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
     # --------- AVAILABLE ENDPOINTS --------- #
 
     available_endpoints = [
-        'jobs',
     ]
     available_endpoint_groups = [
-        accounting_endpoints,
         accounting_id_endpoints,
         reporting_endpoints,
         reporting_id_endpoints,
         forms_endpoints,
         crm_endpoints,
         crm_id_endpoints,
+        dispatch_endpoints,
+        dispatch_id_endpoints,
+        installed_systems_endpoints,
+        installed_systems_id_endpoints,
+        inventory_endpoints,
+        inventory_id_endpoints,
+        job_booking_endpoints,
+        job_planning_endpoints,
+        job_planning_id_endpoints,
     ]
     for group in available_endpoint_groups:
         available_endpoints.extend(group)
@@ -164,79 +250,163 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
             
             if endpoint in ['booking-provider-tags/', 'bookings/', 'customers/','leads/','locations/']:
                 if id != None:
-                    url = f"{general_urls['accounting_url_tenant']}{endpoint}{id}"
+                    url = f"{general_urls['crm_url_tenant']}{endpoint}{id}"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
             if endpoint in ['/bookings']:
                 if category != None:
-                    url = f"{general_urls['accounting_url_tenant']}{category}{endpoint}"
+                    url = f"{general_urls['crm_url_tenant']}{category}{endpoint}"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an Category in order to run. Please enter category as an arg.")
             
             if endpoint in ['/bookings/',]:
                 if category != None and id != None:
-                    url = f"{general_urls['accounting_url_tenant']}{category}{endpoint}{id}"
+                    url = f"{general_urls['crm_url_tenant']}{category}{endpoint}{id}"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
 
             if endpoint == '/bookings-contacts/':
                 if category != None and id != None:
-                    url = f"{general_urls['accounting_url_tenant']}{category}/bookings/{id}/contacts"
+                    url = f"{general_urls['crm_url_tenant']}{category}/bookings/{id}/contacts"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
 
             if endpoint == 'bookings-contacts/':
                 if id != None:
-                    url = f"{general_urls['accounting_url_tenant']}bookings/{id}/contacts"
+                    url = f"{general_urls['crm_url_tenant']}bookings/{id}/contacts"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
             if endpoint == 'customers-contacts/':
                 if id != None:
-                    url = f"{general_urls['accounting_url_tenant']}customers/{id}/contacts"
+                    url = f"{general_urls['crm_url_tenant']}customers/{id}/contacts"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
             if endpoint == 'customers-notes/':
                 if id != None:
-                    url = f"{general_urls['accounting_url_tenant']}customers/{id}/notes"
+                    url = f"{general_urls['crm_url_tenant']}customers/{id}/notes"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
             if endpoint == 'leads-notes/':
                 if id != None:
-                    url = f"{general_urls['accounting_url_tenant']}leads/{id}/notes"
+                    url = f"{general_urls['crm_url_tenant']}leads/{id}/notes"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
             if endpoint == 'locations-contacts/':
                 if id != None:
-                    url = f"{general_urls['accounting_url_tenant']}locations/{id}/contacts"
+                    url = f"{general_urls['crm_url_tenant']}locations/{id}/contacts"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
             if endpoint == 'locations-notes/':
                 if id != None:
-                    url = f"{general_urls['accounting_url_tenant']}locations/{id}/notes"
+                    url = f"{general_urls['crm_url_tenant']}locations/{id}/notes"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+        # Dispatch Endpoints
+
+        if endpoint in dispatch_endpoints:
+            url = f"{general_urls['dispatch_url_tenant']}{endpoint}"
+            return get_request(credentials,query,url)
+        
+        if endpoint in ['non-job-appointments/','teams/','technician-shifts/','zones/']:
+            if id != None:
+                url = f"{general_urls['dispatch_url_tenant']}{endpoint}{id}"
+                return get_request(credentials,query,url)
+            else:
+                print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+        # Installed Systems Endpoints
+        
+        if endpoint in installed_systems_endpoints:
+            url = f"{general_urls['installed_systems_url_tenant']}{endpoint}"
+            return get_request(credentials,query,url)
+        
+        if endpoint in ['installed-equipment/',]:
+            if id != None:
+                url = f"{general_urls['installed_systems_url_tenant']}{endpoint}{id}"
+                return get_request(credentials,query,url)
+            else:
+                print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
         # Forms Endpoints
         
         if endpoint in forms_endpoints:
             url = f"{general_urls['forms_url_tenant']}{endpoint}"
             return get_request(credentials, query, url)
+
+        # Inventory Endpoints
+
+        if endpoint in inventory_endpoints:
+            url = f"{general_urls['inventory_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+
+        if endpoint in ['purchase-orders/','purchase-order-markups/','vendors/']:
+            if id != None:
+                url = f"{general_urls['inventory_url_tenant']}{endpoint}{id}"
+                return get_request(credentials,query,url)
+            else:
+                print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+        # Job Booking Endpoints
+
+        if endpoint in job_booking_endpoints:
+            url = f"{general_urls['job_booking_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+
+        # Job Planning Endpoints
+
+        if endpoint in job_planning_endpoints:
+            url = f"{general_urls['job_planning_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)       
+
+        if endpoint in job_planning_id_endpoints:
+            
+            if endpoint in ['appointments/','jobs/','job-types/','projects/','project-statuses/','project-substatuses/']:
+                if id != None:
+                    url = f"{general_urls['job_planning_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['job-cancel-reasons/']:
+                if id != None:
+                    url = f"{general_urls['job_planning_url_tenant']}jobs/cancel-reasons?ids={id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires IDs in order to run. Please enter ids as an arg.")
+            if endpoint in ['jobs-history/']:
+                if id != None:
+                    url = f"{general_urls['job_planning_url_tenant']}jobs/{id}/history"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['jobs-notes/']:
+                if id != None:
+                    url = f"{general_urls['job_planning_url_tenant']}jobs/{id}/notes"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['projects-notes/']:
+                if id != None:
+                    url = f"{general_urls['job_planning_url_tenant']}projects/{id}/notes"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
         # Reporting Endpoints
 
@@ -264,10 +434,6 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
                 else:
                     print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
 
-        # jobs
-        if endpoint == 'jobs':
-            url = f"{general_urls['jpm_url_tenant']}/jobs"
-            return get_request(credentials, query, url)
 
 
     # Attempts to make a request to a general endpoint if it has not been manually added
