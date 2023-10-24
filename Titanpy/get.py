@@ -33,7 +33,9 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         "inventory_url_tenant":f"https://api.servicetitan.io/inventory/v2/tenant/{credentials['TENANT_ID']}/",
         "job_booking_url_tenant":f"https://api.servicetitan.io/jbce/v2/tenant/{credentials['TENANT_ID']}/",
         "job_planning_url_tenant": f"https://api.servicetitan.io/jpm/v2/tenant/{credentials['TENANT_ID']}/",
-
+        "marketing_url_tenant": f"https://api.servicetitan.io/marketing/v2/tenant/{credentials['TENANT_ID']}/",
+        "marketing_reputation_url_tenant": f"https://api.servicetitan.io/marketingreputation/v2/tenant/{credentials['TENANT_ID']}/",
+        "memberships_url_tenant": f"https://api.servicetitan.io/memberships/v2/tenant/{credentials['TENANT_ID']}/"
     }
 
     # --------- ENDPOINT GROUPS --------- #
@@ -164,7 +166,7 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
     ]
     job_planning_id_endpoints = [
         'appointments/',
-        'jobs-cancel-reasons/',
+        'jobs-cancel-reasons//',
         'jobs/',
         'jobs-history/',
         'jobs-notes/',
@@ -173,6 +175,54 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         'projects-notes/',
         'project-statuses/'
         'project-substatuses/',
+    ]
+
+    # Marketing
+    marketing_endpoints = [
+        'categories',
+        'costs',
+        'campaigns',
+        'suppressions',
+    ]
+    marketing_id_endpoints = [
+        'categories/',
+        'costs/',
+        'campaigns/',
+        'campaigns-costs/',
+        'suppressions/',
+    ]
+
+    # Marketing Reputation
+    marketing_reputation_endpoints = [
+        'reviews',
+    ]
+
+    # Memberships Endpoints
+    memberships_endpoints = [
+        'export/invoice-templates',
+        'export/membership-types',
+        'export/memberships',
+        'export/recurring-service-events',
+        'export/recurring-service-types',
+        'export/recurring-services',
+        'memberships',
+        'recurring-service-events',
+        'recurring-services',
+        'membership-types',
+        'recurring-service-types',
+
+    ]
+    memberships_id_endpoints = [
+        'memberships/',
+        'memberships-status-changes/',
+        'invoice-templates/',
+        'invoice-templates//',
+        'recurring-services/',
+        'membership-types/',
+        'membership-types-discounts/',
+        'membership-types-duration-billing-items/',
+        'membership-types-recurring-service-items/',
+        'recurring-service-types/',
     ]
 
     # Reporting
@@ -205,6 +255,11 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         job_booking_endpoints,
         job_planning_endpoints,
         job_planning_id_endpoints,
+        marketing_endpoints,
+        marketing_id_endpoints,
+        marketing_reputation_endpoints,
+        memberships_endpoints,
+        memberships_id_endpoints,
     ]
     for group in available_endpoint_groups:
         available_endpoints.extend(group)
@@ -383,7 +438,7 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
-            if endpoint in ['job-cancel-reasons/']:
+            if endpoint in ['job-cancel-reasons//']:
                 if id != None:
                     url = f"{general_urls['job_planning_url_tenant']}jobs/cancel-reasons?ids={id}"
                     return get_request(credentials,query,url)
@@ -404,6 +459,76 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
             if endpoint in ['projects-notes/']:
                 if id != None:
                     url = f"{general_urls['job_planning_url_tenant']}projects/{id}/notes"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+        # Marketing Endpoints
+
+        if endpoint in marketing_endpoints:
+            url = f"{general_urls['marketing_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url) 
+        
+        if endpoint in marketing_id_endpoints:
+            if endpoint in ['categories/','costs/','campaigns/','suppressions/']:
+                if id != None:
+                    url = f"{general_urls['marketing_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg. (Email is considered and ID for suppressions/ endpoints.)")
+            if endpoint in ['campaigns-costs/']:
+                if id != None:
+                    url = f"{general_urls['marketing_url_tenant']}campaigns/{id}/costs"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+        
+        # Marketing Reputation Endpoints
+
+        if endpoint in marketing_reputation_endpoints:
+            url = f"{general_urls['marketing_reputation_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+
+        # Memberships Endpoints
+
+        if endpoint in memberships_endpoints:
+            url = f"{general_urls['memberships_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+        
+        if endpoint in memberships_id_endpoints:
+            if endpoint in ['memberships/', 'invoice-templates/', 'recurring-services/', 'membership-types/', 'recurring-service-types/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['memberships-status-changes/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}memberships/{id}/status-changes"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['invoice-templates//']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}invoice-templates?id={id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires IDs in order to run. Please enter ids as an arg.")
+            if endpoint in ['membership-types-discounts/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}membership-types/{id}/discounts"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['membership-types-duration-billing-items/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}membership-types/{id}/duration-billing-items"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['membership-types-recurring-service-items/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}membership-types/{id}/recurring-service-items"
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
@@ -433,8 +558,6 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
-
-
 
     # Attempts to make a request to a general endpoint if it has not been manually added
     # TO-DO AI assisted url creation
