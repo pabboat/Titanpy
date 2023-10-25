@@ -35,7 +35,15 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         "job_planning_url_tenant": f"https://api.servicetitan.io/jpm/v2/tenant/{credentials['TENANT_ID']}/",
         "marketing_url_tenant": f"https://api.servicetitan.io/marketing/v2/tenant/{credentials['TENANT_ID']}/",
         "marketing_reputation_url_tenant": f"https://api.servicetitan.io/marketingreputation/v2/tenant/{credentials['TENANT_ID']}/",
-        "memberships_url_tenant": f"https://api.servicetitan.io/memberships/v2/tenant/{credentials['TENANT_ID']}/"
+        "memberships_url_tenant": f"https://api.servicetitan.io/memberships/v2/tenant/{credentials['TENANT_ID']}/",
+        "payroll_url_tenant": f"https://api.servicetitan.io/payroll/v2/tenant/{credentials['TENANT_ID']}/",
+        "pricebook_url_tenant": f"https://api.servicetitan.io/pricebook/v2/tenant/{credentials['TENANT_ID']}/",
+        "estimates_url_tenant": f"https://api.servicetitan.io/sales/v2/tenant/{credentials['TENANT_ID']}/",
+        "service_agreements_url_tenant": f"https://api.servicetitan.io/service-agreements/v2/tenant/{credentials['TENANT_ID']}/",
+        "settings_url_tenant": f"https://api.servicetitan.io/settings/v2/tenant/{credentials['TENANT_ID']}/",
+        "task_management_url_tenant": f"https://api.servicetitan.io/taskmanagement/v2/tenant/{credentials['TENANT_ID']}/",
+        "telecom_url_tenant": f"https://api.servicetitan.io/telecom/v2/tenant/{credentials['TENANT_ID']}/",
+        "telecom_url_v3_tenant": f"https://api.servicetitan.io/telecom/v3/tenant/{credentials['TENANT_ID']}/",
     }
 
     # --------- ENDPOINT GROUPS --------- #
@@ -173,7 +181,7 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         'job-types/',
         'projects/',
         'projects-notes/',
-        'project-statuses/'
+        'project-statuses/',
         'project-substatuses/',
     ]
 
@@ -225,6 +233,53 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         'recurring-service-types/',
     ]
 
+    # Payroll
+    payroll_endpoints = [
+        'export/activity-codes',
+        'export/gross-pay-items',
+        'export/jobs/splits',
+        'export/jobs/timesheets',
+        'export/payroll-adjustments',
+        'export/timesheet-codes',
+        'activity-codes',
+        'gross-pay-items',
+        'jobs/splits',
+        'locations/rates',
+        'payroll-adjustments',
+        'payrolls',
+        'timesheet-codes',
+        'jobs/timesheets',
+        'non-job-timesheets',
+    ]
+    payroll_id_endpoints = [
+        'activity-codes/',
+        'jobs-splits/',
+        'payroll-adjustments/',
+        'employees-payrolls/',
+        'technicians-payrolls/',
+        'timesheet-codes/',
+        'jobs-timesheets/',
+    ]
+
+    # Pricebook
+    pricebook_endpoints = [
+        'categories',
+        'discounts-and-fees',
+        'equipment',
+        'images',
+        'materials',
+        'materialsmarkup',
+        'services',
+    ]
+    pricebook_id_endpoints = [
+        'categories/',
+        'discounts-and-fees/',
+        'equipment/',
+        'materials/',
+        'materialsmarkup/',
+        'services/',
+    ]
+
     # Reporting
     reporting_endpoints = [
         'report-categories',
@@ -233,6 +288,61 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         'dynamic-value-sets/',
         '/reports',
         '/reports/',
+    ]
+
+    # Sales/Estimates
+    estimates_endpoints = [
+        'estimates/export',
+        'estimates',
+        'estimates/items',
+    ]
+    estimates_id_endpoints = [
+        'estimates/',
+    ]
+
+    # Service Agreements
+    service_agreements_endpoints = [
+        'export/service-agreements',
+        'service-agreements',
+    ]
+    service_agreements_id_endpoints = [
+        'service-agreements/',
+    ]
+
+    # Settings
+    settings_endpoints = [
+        'export/business-units',
+        'export/employees',
+        'export/tag-types',
+        'export/technicians',
+        'business_units',
+        'employees',
+        'tag-types',
+        'technicians',
+        'user-roles',
+    ]
+    settings_id_endpoints = [
+        'business_units/',
+        'employees/',
+        'technicians/',
+    ]
+
+    # Task Management
+    task_management_endpoints = [
+        'data',
+    ]
+
+    # Telecom
+    telecom_endpoints = [
+        'export/calls',
+    ]
+    telecom_v3_endpoints = [
+        'calls',
+    ]
+    telecom_id_endpoints = [
+        'calls/',
+        'calls-recording/',
+        'calls-voicemail/',
     ]
 
     # --------- AVAILABLE ENDPOINTS --------- #
@@ -260,6 +370,18 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
         marketing_reputation_endpoints,
         memberships_endpoints,
         memberships_id_endpoints,
+        payroll_endpoints,
+        payroll_id_endpoints,
+        pricebook_endpoints,
+        pricebook_id_endpoints,
+        estimates_endpoints,
+        estimates_id_endpoints,
+        service_agreements_endpoints,
+        service_agreements_id_endpoints,
+        settings_endpoints,
+        settings_id_endpoints,
+        task_management_endpoints,
+
     ]
     for group in available_endpoint_groups:
         available_endpoints.extend(group)
@@ -533,6 +655,58 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
                 else:
                     print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
+        # Payroll Endpoints
+
+        if endpoint in payroll_endpoints:
+            url = f"{general_urls['payroll_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+        
+        if endpoint in payroll_id_endpoints:
+            if endpoint in ['activity-codes/', 'payroll-adjustments/', 'timesheet-codes/',]:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['jobs-splits/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}jobs/{id}/splits"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['employees-payrolls/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}employees/{id}/payrolls"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['technicians-payrolls/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}technicians/{id}/payrolls"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['jobs-timesheets/']:
+                if id != None:
+                    url = f"{general_urls['memberships_url_tenant']}jobs/{id}/timesheets"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+        # Pricebook Endpoints
+
+        if endpoint in pricebook_endpoints:
+            url = f"{general_urls['pricebook_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+
+        if endpoint in pricebook_id_endpoints:
+            if endpoint in ['categories/', 'discounts-and-fees/', 'equipment/', 'materials/', 'materialsmarkup/', 'services/',]:
+                if id != None:
+                    url = f"{general_urls['pricebook_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
         # Reporting Endpoints
 
         if endpoint in reporting_endpoints:
@@ -558,6 +732,82 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
                     return get_request(credentials,query,url)
                 else:
                     print("The requested endpoint requires an ID and a Category in order to run. Please enter id and category as an arg.")
+
+        # Sales/Estimates Endpoints
+
+        if endpoint in estimates_endpoints:
+            url = f"{general_urls['estimates_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+        
+        if endpoint in estimates_id_endpoints:
+            if endpoint in ['estimates/',]:
+                if id != None:
+                    url = f"{general_urls['estimates_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+        
+        # Service Agreement Endpoints
+
+        if endpoint in service_agreements_endpoints:
+            url = f"{general_urls['service_agreements_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+        
+        if endpoint in service_agreements_id_endpoints:
+            if endpoint in ['service-agreements/',]:
+                if id != None:
+                    url = f"{general_urls['service_agreements_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+        # Settings Endpoints
+
+        if endpoint in settings_endpoints:
+            url = f"{general_urls['settings_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+        
+        if endpoint in settings_id_endpoints:
+            if endpoint in ['business_units/', 'employees/', 'technicians/',]:
+                if id != None:
+                    url = f"{general_urls['settings_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+
+        # Task Management Endpoints
+
+        if endpoint in task_management_endpoints:
+            url = f"{general_urls['task_management_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+
+        # Telecom Endpoints
+
+        if endpoint in telecom_endpoints:
+            url = f"{general_urls['telecom_url_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+        if endpoint in telecom_v3_endpoints:
+            url = f"{general_urls['telecom_url_v3_tenant']}{endpoint}"
+            return get_request(credentials, query, url)
+        if endpoint in telecom_id_endpoints:
+            if endpoint in ['calls/',]:
+                if id != None:
+                    url = f"{general_urls['telecom_url_tenant']}{endpoint}{id}"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['calls-recording/',]:
+                if id != None:
+                    url = f"{general_urls['telecom_url_tenant']}calls/{id}/recording"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
+            if endpoint in ['calls-voicemail/',]:
+                if id != None:
+                    url = f"{general_urls['telecom_url_tenant']}calls/{id}/voicemail"
+                    return get_request(credentials,query,url)
+                else:
+                    print("The requested endpoint requires an ID in order to run. Please enter id as an arg.")
 
     # Attempts to make a request to a general endpoint if it has not been manually added
     # TO-DO AI assisted url creation
