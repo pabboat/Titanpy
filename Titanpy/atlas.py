@@ -1,1 +1,5 @@
-# Future script that builds/updates a dbt schema from scratch configuration
+from Titanpy.titanpy import Titanpy
+
+class Atlas():
+    def __init__(self):
+        pass
