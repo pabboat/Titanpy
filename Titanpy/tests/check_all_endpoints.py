@@ -1,7 +1,7 @@
 from Titanpy import Titanpy
 # --------- ENDPOINT GROUPS --------- #
 
-    # Accounting
+# Accounting
 accounting_endpoints = [
     'export/inventory-bills',
     'export/invoice-items',
@@ -127,15 +127,110 @@ job_planning_endpoints = [
 ]
 job_planning_id_endpoints = [
     'appointments/',
-    'jobs-cancel-reasons/',
+    'jobs-cancel-reasons//',
     'jobs/',
     'jobs-history/',
     'jobs-notes/',
     'job-types/',
     'projects/',
     'projects-notes/',
-    'project-statuses/'
+    'project-statuses/',
     'project-substatuses/',
+]
+
+# Marketing
+marketing_endpoints = [
+    'categories',
+    'costs',
+    'campaigns',
+    'suppressions',
+]
+marketing_id_endpoints = [
+    'categories/',
+    'costs/',
+    'campaigns/',
+    'campaigns-costs/',
+    'suppressions/',
+]
+
+# Marketing Reputation
+marketing_reputation_endpoints = [
+    'reviews',
+]
+
+# Memberships Endpoints
+memberships_endpoints = [
+    'export/invoice-templates',
+    'export/membership-types',
+    'export/memberships',
+    'export/recurring-service-events',
+    'export/recurring-service-types',
+    'export/recurring-services',
+    'memberships',
+    'recurring-service-events',
+    'recurring-services',
+    'membership-types',
+    'recurring-service-types',
+
+]
+memberships_id_endpoints = [
+    'memberships/',
+    'memberships-status-changes/',
+    'invoice-templates/',
+    'invoice-templates//',
+    'recurring-services/',
+    'membership-types/',
+    'membership-types-discounts/',
+    'membership-types-duration-billing-items/',
+    'membership-types-recurring-service-items/',
+    'recurring-service-types/',
+]
+
+# Payroll
+payroll_endpoints = [
+    'export/activity-codes',
+    'export/gross-pay-items',
+    'export/jobs/splits',
+    'export/jobs/timesheets',
+    'export/payroll-adjustments',
+    'export/timesheet-codes',
+    'activity-codes',
+    'gross-pay-items',
+    'jobs/splits',
+    'locations/rates',
+    'payroll-adjustments',
+    'payrolls',
+    'timesheet-codes',
+    'jobs/timesheets',
+    'non-job-timesheets',
+]
+payroll_id_endpoints = [
+    'activity-codes/',
+    'jobs-splits/',
+    'payroll-adjustments/',
+    'employees-payrolls/',
+    'technicians-payrolls/',
+    'timesheet-codes/',
+    'jobs-timesheets/',
+]
+
+# Pricebook
+pricebook_endpoints = [
+    'categories',
+    'discounts-and-fees',
+    'equipment',
+    'images',
+    'materials',
+    'materialsmarkup',
+    'services',
+]
+pricebook_id_endpoints = [
+    'categories/',
+    'discounts-and-fees/',
+    'equipment/',
+    'materials/',
+    'materialsmarkup/',
+    'services/',
 ]
 
 # Reporting
@@ -146,6 +241,61 @@ reporting_id_endpoints = [
     'dynamic-value-sets/',
     '/reports',
     '/reports/',
+]
+
+# Sales/Estimates
+estimates_endpoints = [
+    'estimates/export',
+    'estimates',
+    'estimates/items',
+]
+estimates_id_endpoints = [
+    'estimates/',
+]
+
+# Service Agreements
+service_agreements_endpoints = [
+    'export/service-agreements',
+    'service-agreements',
+]
+service_agreements_id_endpoints = [
+    'service-agreements/',
+]
+
+# Settings
+settings_endpoints = [
+    'export/business-units',
+    'export/employees',
+    'export/tag-types',
+    'export/technicians',
+    'business_units',
+    'employees',
+    'tag-types',
+    'technicians',
+    'user-roles',
+]
+settings_id_endpoints = [
+    'business_units/',
+    'employees/',
+    'technicians/',
+]
+
+# Task Management
+task_management_endpoints = [
+    'data',
+]
+
+# Telecom
+telecom_endpoints = [
+    'export/calls',
+]
+telecom_v3_endpoints = [
+    'calls',
+]
+telecom_id_endpoints = [
+    'calls/',
+    'calls-recording/',
+    'calls-voicemail/',
 ]
 
 # --------- AVAILABLE ENDPOINTS --------- #
@@ -168,9 +318,27 @@ available_endpoint_groups = [
     job_booking_endpoints,
     job_planning_endpoints,
     job_planning_id_endpoints,
+    marketing_endpoints,
+    marketing_id_endpoints,
+    marketing_reputation_endpoints,
+    memberships_endpoints,
+    memberships_id_endpoints,
+    payroll_endpoints,
+    payroll_id_endpoints,
+    pricebook_endpoints,
+    pricebook_id_endpoints,
+    estimates_endpoints,
+    estimates_id_endpoints,
+    service_agreements_endpoints,
+    service_agreements_id_endpoints,
+    settings_endpoints,
+    settings_id_endpoints,
+    task_management_endpoints,
+
 ]
 for group in available_endpoint_groups:
     available_endpoints.extend(group)
+
 
 
 # --------- TEST ENDPOINTS --------- #
