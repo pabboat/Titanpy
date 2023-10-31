@@ -7,7 +7,7 @@ def get_request(credentials, query, url):
         "ST-App-Key": credentials["APP_KEY"],
         "Authorization": credentials["ACCESS_TOKEN"]
     }
-
+    print(f"requesting from {url}")
     default_query_parameters = {
     }
     if query != None:
