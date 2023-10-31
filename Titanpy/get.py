@@ -7,7 +7,7 @@ def get_request(credentials, query, url):
         "ST-App-Key": credentials["APP_KEY"],
         "Authorization": credentials["ACCESS_TOKEN"]
     }
-    print(f"requesting from {url}")
+    print(f"(Requesting from {url})")
     default_query_parameters = {
     }
     if query != None:
@@ -350,6 +350,7 @@ def get(credentials, endpoint, query, id, category, *args, **kwargs):
     available_endpoints = [
     ]
     available_endpoint_groups = [
+        accounting_endpoints,
         accounting_id_endpoints,
         reporting_endpoints,
         reporting_id_endpoints,
