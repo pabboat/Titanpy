@@ -32,18 +32,6 @@ dependencies = [
     "urllib3==2.0.4"
 ]
 
-[tool.setuptools]
-include-package-data = false
-license-files = ["LICENSES/*.txt"]
-
-[tool.setuptools.packages.find]
-where = ["atlas_scripts/defaults/types","atlas_scripts/sql"]
-include = ["types","sql"]
-
-[tools.setuptools.package-data]
-sql = ["*.sql"]
-types = ["*.json"]
-
 [project.urls]
 "Homepage" = "https://github.com/pabboat/Titanpy"
 "Bug Tracker" = "https://github.com/pabboat/Titanpy/issues"
