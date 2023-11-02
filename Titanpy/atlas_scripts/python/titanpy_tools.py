@@ -104,7 +104,7 @@ def pull_full_dataframe(engine, st_creds_path, endpoint, titanpy_instance, start
 
 def titanpy_dataframe(engine, endpoint_list, st_creds_path, start_date=None):
     
-    from titanpy import Titanpy
+    from Titanpy.titanpy import Titanpy
     from threading import Thread
 
     tp = Titanpy()
