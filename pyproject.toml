@@ -35,3 +35,6 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/pabboat/Titanpy"
 "Bug Tracker" = "https://github.com/pabboat/Titanpy/issues"
+
+[tool.setuptools.package-data]
+myModule = ["*.sql","*.json"]
