@@ -1,4 +1,4 @@
-# Titanpy
+# Titanpy V0.1.0
 
 Python class for interacting with all Servicetitan's api endpoints
 
@@ -10,6 +10,8 @@ py -m pip install --upgrade Titanpy
 I created this library to catalog and create handlers for all ServiceTitan API endpoints. With handlers and defaults created, autogeneration of an entire database will be as simple as requesting from specific endpoint's defaults and generating an ETL schema creating data marts for Data Analysts to create dashboards from.
 
 Titanpy Atlas will be the service to do this, by configuring simple parameters is will use SQLAlchemy, Pandas, and DBT to create an entire data warehouse from Servicetitan data so major common datasets between organizations can be created without the need of costly Data Engineers and professional development.
+
+Titanpy was heavily inspired by [ServicePytan](https://github.com/elliotpalmer/servicepytan), which was the basis of the general implementation of Titanpy and Atlas.
 
 
 ## Tutorials
@@ -40,6 +42,45 @@ Then you must connect to your ServiceTitan api developer account by getting cred
 After you are succesfully connected, you can make a get request to any endpoint currently integrated into the library. You can find all endpoints at the bottom of this page. Following that, you must put in a query. If you do not enter a query, a default query will be provided. Next you may enter ID(s) and Categories(s) depending on the endpoint you are using. For documentation on how to use these endpoints, please visit [ServiceTitan Developer API Reference](https://developer.servicetitan.io/apis/). In addition to finding documentation on how to create your own queries, you can also find endpoints that have been yet to be integrated. You can skip the endpoint list and simply enter the url and query if you wish to do so.
 
 And you're done! This simple three step process will return a request object from the requests library.
+
+### Creating the Default Atlas Schema
+
+Generally, all you have to do is run the following script with your own parameters per database and servicetitan tenant you want to have data for in your Atlas schema.
+
+```
+from Titanpy import Atlas
+
+Atlas().Build({path to sql credentials}, {path to servicetitan credentials}, type = 'Default', start_date = {'yyyy-mm-dd' or none})
+```
+
+Servicetitan credentials should be in the following format:
+
+```
+{
+    "CLIENT_ID": "{client id}",
+    "CLIENT_SECRET": "{client secret}",
+    "APP_ID": "{app id}",
+    "APP_KEY": "{app key}",
+    "TENANT_ID": "{tenant id}",
+    "TIMEZONE": "{timezone}"
+}
+```
+
+SQL Credentials should be in the following format:
+
+```
+{
+    "host": "{host}",
+    "port": "{port}",
+    "dbname": "{database name}",
+    "user": "{username}",
+    "pass": "{password}",
+    "db_type": "postgresql15",
+    "schema": "atlas"
+}
+```
+
+Currently, the only database type acceptable is postgresql v15. In addition, all schemas default to atlas schema. We plan to update this is the future to have more connectors.
 
 ### Adding get endpoints
 
