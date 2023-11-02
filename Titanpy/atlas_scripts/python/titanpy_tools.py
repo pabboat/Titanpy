@@ -1,8 +1,15 @@
+def standardize_name(endpoint):
+    endpoint = endpoint.lower()
+    endpoint = endpoint.replace("/", "_")
+    endpoint = endpoint.replace("-", "_")
+    return endpoint
+
 def verify_endpoint(endpoint, df):
     from os import path, getcwd
     import pandas as pd
     from json import loads
-    endpoint_name = endpoint.lower().replace("/", "_")
+    
+    endpoint_name = standardize_name(endpoint)
 
     default_json_file = f"{endpoint_name}.json"
 
@@ -11,9 +18,8 @@ def verify_endpoint(endpoint, df):
     type_file = open(path.join(__location__, file_path),'r')
     default_type = loads(type_file.read())
     type_file.close()
-
+    
     default_df = pd.json_normalize(default_type, sep="_")
-
     df_columns_list = df.columns.values.tolist()
     default_df_columns_list = default_df.columns.values.tolist()
     # print(df_columns_list)
@@ -30,10 +36,78 @@ def verify_endpoint(endpoint, df):
 
     return default_df
 
-def titanpy_dataframe(endpoint_list, st_creds_path):
+
+def pull_full_dataframe(engine, st_creds_path, endpoint, titanpy_instance, start_date=None):
+
+    import pandas as pd
+    import logging
+    from database_tools import stage_then_merge
+    from datetime import date
+    import sys
+
+    print(f"Saving logs to {standardize_name(endpoint)}.log")
+    logging.basicConfig(filename=f"atlas.log", force=True)
+    print(f"________________ Getting data from {endpoint} _________________")
+
+    tp = titanpy_instance
+
+    query = {
+        "tenant": tp.tenant_id,
+        "from": start_date
+    }
+
+    result = tp.Get(endpoint,query=query)
+
+    result_json = result.json()
+    # print(result_json)
+    data = result_json['data']
+    has_more = result_json['hasMore']
+    continue_from = result_json['continueFrom']
+    total_length = 0
+
+    df = pd.json_normalize(data, sep="_")
+    verify_endpoint(endpoint, df)
+    total_length += len(df)
+
+    df["tenant_id"] = tp.tenant_id
+    df_dict = {}
+    df_dict[standardize_name(endpoint)] = df
+    stage_then_merge(engine, df_dict)
+
+    while has_more==True:
+        query["from"] = continue_from
+        logging.info(f"More data to request. Continue from code: {continue_from}")
+        try:
+            result = tp.Get(endpoint,query=query)
+            while result.status_code != 200:
+                if result.status_code == 401:
+                    tp.Connect(cred_path = st_creds_path)
+                    result = tp.Get(endpoint,query=query)
+                    print(result.json())
+                else:
+                    from time import sleep
+                    logging.info("Waiting 30 seconds due to rate limit")
+                    sleep(30)
+                    result = tp.Get(endpoint,query=query)
+        except Exception as e:
+            logging.error(e)
+        result_json = result.json()
+        data = result_json['data']
+        has_more = result_json['hasMore']
+        continue_from = result_json['continueFrom']
+        df2 = pd.json_normalize(data, sep="_")
+        df2["tenant_id"] = tp.tenant_id
+        df_dict = {}
+        df_dict[standardize_name(endpoint)] = df2
+        stage_then_merge(engine, df_dict)
+        total_length += len(df2)
+
+        logging.info(f"Total Results ({endpoint}) so far: {total_length}")
+
+def titanpy_dataframe(engine, endpoint_list, st_creds_path, start_date=None):
     
     from Titanpy import Titanpy
-    import pandas as pd
+    from threading import Thread
 
     tp = Titanpy()
     tp.Connect(cred_path = st_creds_path)
@@ -43,24 +117,10 @@ def titanpy_dataframe(endpoint_list, st_creds_path):
     else:
         endpoint_list = [endpoint_list]
 
-    df_dict = {}
     for endpoint in endpoint_list:
+        # pull_full_dataframe(engine,st_creds_path,endpoint,tp,start_date)
+        Thread(target = pull_full_dataframe, args=(engine, st_creds_path,endpoint, tp, start_date)).start()
 
-        result = tp.Get(endpoint)
-        result_json = result.json()
-
-        data = result_json['data']
-        has_more = result_json['hasMore']
-        continue_from = result_json['continueFrom']
-        print(has_more)
-
-        df = pd.json_normalize(data, sep="_")
-        verify_endpoint(endpoint, df)
-
-        df["tenant_id"] = tp.tenant_id
-        df_dict[endpoint] = df
-
-    print(df_dict['export/jobs'])
 
 
     

@@ -3,7 +3,7 @@
 
 # imports
 from Titanpy.titanpy import Titanpy
-# from Titanpy.atlas import Atlas
+from Titanpy.atlas import Atlas
 
 # test scripts
 

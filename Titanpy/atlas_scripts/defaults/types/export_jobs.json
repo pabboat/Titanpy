@@ -39,5 +39,5 @@
         "key": "string",
         "value": "string"
     }],
-    "customerPo": 0
+    "customerPo": "string"
 }]
