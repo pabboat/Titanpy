@@ -32,6 +32,11 @@ dependencies = [
     "urllib3==2.0.4"
 ]
 
+[tool.setuptools]
+package-dir = {"" = "."}
+include-package-data = true
+license-files = ["LICENSES/*.txt"]
+
 [tools.setuptools.package-data]
 sql_json_package = ["*.sql","*.json"]
 
