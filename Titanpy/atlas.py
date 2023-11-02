@@ -6,7 +6,7 @@ class Atlas:
 
     def Build(self, sql_creds_path, st_creds_path, type = 'Default', start_date = None):
 
-        from atlas_scripts.python.build_types import Default
+        from Titanpy.atlas_scripts.python.build_types import Default
         if type == 'Default':
             Default(sql_creds_path, st_creds_path, start_date)
 
