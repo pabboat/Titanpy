@@ -81,7 +81,6 @@ def pull_full_dataframe(engine, st_creds_path, endpoint, titanpy_instance, start
                 if result.status_code == 401:
                     tp.Connect(cred_path = st_creds_path)
                     result = tp.Get(endpoint,query=query)
-                    print(result.json())
                 else:
                     from time import sleep
                     logging.info("Waiting 30 seconds due to rate limit")
