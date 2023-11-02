@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Titanpy"
-version = "0.1.7"
+version = "0.1.8"
 authors = [
   { name="Dylan Rose", email="dylantrose@gmail.com" },
 ]
@@ -32,9 +32,9 @@ dependencies = [
     "urllib3==2.0.4"
 ]
 
+[tools.setuptools.package-data]
+sql_json_package = ["*.sql","*.json"]
+
 [project.urls]
 "Homepage" = "https://github.com/pabboat/Titanpy"
 "Bug Tracker" = "https://github.com/pabboat/Titanpy/issues"
-
-[tool.setuptools.package-data]
-myModule = ["*.sql","*.json"]
