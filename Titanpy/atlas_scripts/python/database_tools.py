@@ -82,7 +82,7 @@ def stage_then_merge(engine, df_dict):
     import logging
 
     for name in df_dict:
-        logging.basicConfig(filename=f"atlas.log", force=True)
+        logging.basicConfig(filename=f"atlas.log", force=True, level=logging.INFO)
         source_name = f"st_src_{name}"
         logging.info(f"Creating {source_name} staging table...")
         df = df_dict[name]

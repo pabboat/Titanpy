@@ -44,7 +44,7 @@ def pull_full_dataframe(engine, st_creds_path, endpoint, titanpy_instance, start
     from .database_tools import stage_then_merge
 
     print(f"Saving logs to {standardize_name(endpoint)}.log")
-    logging.basicConfig(filename=f"atlas.log", force=True)
+    logging.basicConfig(filename=f"atlas.log", force=True, level=logging.INFO)
     print(f"________________ Getting data from {endpoint} _________________")
 
     tp = titanpy_instance
