@@ -43,7 +43,10 @@ def Default(sql_creds_path, st_creds_path, start_date = None):
     engine = create_engine(sql_creds_path)
 
     print("\n------------------ Initializing Default Atlas Schema -------------------")
-    run_sql(engine, '../sql/create_atlas_schema.sql')
+    import os
+    this_dir, this_filename = os.path.split(__file__)
+    DATA_PATH = os.path.join(this_dir, "../sql/create_atlas_schema.sql")
+    run_sql(engine, DATA_PATH)
     print("\nAtlas Schema Initialized")
     print("\n------------------ Getting Servicetitan Data ---------------------------\n")
     df_dict = titanpy_dataframe(engine, endpoint_list, st_creds_path, start_date=start_date)

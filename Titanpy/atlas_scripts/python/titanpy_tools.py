@@ -5,7 +5,6 @@ def standardize_name(endpoint):
     return endpoint
 
 def verify_endpoint(endpoint, df):
-    from os import path, getcwd
     import pandas as pd
     from json import loads
     
@@ -13,7 +12,10 @@ def verify_endpoint(endpoint, df):
 
     default_json_file = f"{endpoint_name}.json"
     file_path = f"../defaults/types/{default_json_file}"
-    type_file = open(file_path)
+    import os
+    this_dir, this_filename = os.path.split(__file__)
+    DATA_PATH = os.path.join(this_dir, file_path)
+    type_file = open(DATA_PATH)
     default_type = loads(type_file.read())
     type_file.close()
     

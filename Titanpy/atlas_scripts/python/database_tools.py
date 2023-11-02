@@ -23,7 +23,6 @@ def create_engine(creds_file_path):
 def run_sql(engine, file_path):
     # Will run a sql file starting from the files base directory.
     from sqlalchemy import text
-
     sql_file = open(file_path)
     sql = sql_file.read()
     sql_file.close()
@@ -63,7 +62,10 @@ def create_stage(engine,endpoint):
     endpoint_name = endpoint
     default_json_file = f"{endpoint_name}.json"
     file_path = f"../defaults/types/{default_json_file}"
-    type_file = open(file_path)
+    import os
+    this_dir, this_filename = os.path.split(__file__)
+    DATA_PATH = os.path.join(this_dir, file_path)
+    type_file = open(DATA_PATH)
     default_type = loads(type_file.read())
     type_file.close()
     default_df = pd.json_normalize(default_type, sep='_', max_level=None)
