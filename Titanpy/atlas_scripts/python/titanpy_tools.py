@@ -12,10 +12,8 @@ def verify_endpoint(endpoint, df):
     endpoint_name = standardize_name(endpoint)
 
     default_json_file = f"{endpoint_name}.json"
-
-    __location__ = path.realpath(path.join(getcwd(), path.dirname(__file__)))
     file_path = f"../defaults/types/{default_json_file}"
-    type_file = open(path.join(__location__, file_path),'r')
+    type_file = open(file_path)
     default_type = loads(type_file.read())
     type_file.close()
     

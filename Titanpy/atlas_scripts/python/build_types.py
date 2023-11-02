@@ -51,4 +51,4 @@ def Default(sql_creds_path, st_creds_path, start_date = None):
 
 
 if __name__ == "__main__":
-    Default("./credentials/postgresql_credentials.json", "./credentials/servicetitan_credentials.json", start_date='2023-01-01')
+    Default("./credentials/postgresql_credentials.json", "./credentials/servicetitan_credentials.json", start_date='2023-11-01')
