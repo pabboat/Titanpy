@@ -10,3 +10,5 @@ class Atlas:
         if type == 'Default':
             Default(sql_creds_path, st_creds_path, start_date)
 
+if __name__ == "__main__":
+    Atlas().Build("./credentials/postgresql_credentials.json", "./credentials/servicetitan_credentials.json", type = 'Default', start_date = '2023-01-01')

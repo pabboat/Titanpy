@@ -59,7 +59,7 @@ def create_stage(engine,endpoint):
     import pandas as pd
     from os import path, getcwd
     from json import loads, dumps
-    from titanpy_tools import standardize_name
+    from .titanpy_tools import standardize_name
     from sqlalchemy import text
 
     endpoint_name = endpoint

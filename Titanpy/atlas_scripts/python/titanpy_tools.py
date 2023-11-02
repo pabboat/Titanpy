@@ -41,9 +41,7 @@ def pull_full_dataframe(engine, st_creds_path, endpoint, titanpy_instance, start
 
     import pandas as pd
     import logging
-    from database_tools import stage_then_merge
-    from datetime import date
-    import sys
+    from .database_tools import stage_then_merge
 
     print(f"Saving logs to {standardize_name(endpoint)}.log")
     logging.basicConfig(filename=f"atlas.log", force=True)
@@ -106,7 +104,7 @@ def pull_full_dataframe(engine, st_creds_path, endpoint, titanpy_instance, start
 
 def titanpy_dataframe(engine, endpoint_list, st_creds_path, start_date=None):
     
-    from Titanpy import Titanpy
+    from titanpy import Titanpy
     from threading import Thread
 
     tp = Titanpy()

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Titanpy"
-version = "0.1.01"
+version = "0.1.2"
 authors = [
   { name="Dylan Rose", email="dylantrose@gmail.com" },
 ]
