@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Titanpy"
-version = "0.1.12"
+version = "0.1.13"
 authors = [
   { name="Dylan Rose", email="dylantrose@gmail.com" },
 ]
@@ -34,14 +34,16 @@ dependencies = [
 
 [tool.setuptools]
 package-dir = {"" = "."}
-include-package-data = true
+include-package-data = false
 license-files = ["LICENSES/*.txt"]
 
 [tool.setuptools.packages.find]
 where = ["atlas_scripts/defaults/types","atlas_scripts/sql"]
+include = ["types","sql"]
 
 [tools.setuptools.package-data]
-sql_json_package = ["*.sql","*.json"]
+sql = ["*.sql"]
+types = ["*.json"]
 
 [project.urls]
 "Homepage" = "https://github.com/pabboat/Titanpy"
