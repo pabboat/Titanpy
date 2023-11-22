@@ -8,8 +8,6 @@ from Titanpy.atlas import Atlas
 # test scripts
 
 if __name__ == "__main__":
-    b = Titanpy()
-
-    b.Connect(cred_path="./credentials/servicetitan_credentials.json")
+    b = Titanpy("./credentials/servicetitan_credentials.json")
 
     print(b.Get(endpoint = 'receipts'))

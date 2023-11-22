@@ -1,33 +1,65 @@
-# Titan Class Doc
+"""Titanpy main class used for API access utilyzing the Request library.
+
+This class has a method for every type of API request. Currently only the
+Connect() and Get() methods function properly. 
+
+Typical usage example:
+
+    tp = Titanpy()
+    tp.Connect("credential/path/string")
+    data = tp.Get("endpoint", {query})
+
+Methods:
+
+    Connect()
+    Get()
+"""
 class Titanpy:
-
-    # Variable Initialization
-    def __init__(self, credentials=None, client_id=None, client_secret=None, app_id=None, app_key=None, tenant_id=None, access_token=None):
+    """Titanpy main class used for API access utilyzing the Request library."""
+    
+    def __init__(self, 
+                 credential_path: str
+    ):
+        """Initializes Servicetitan credentials for Connect method
         
-        # credential variables
-        self.credentials = credentials
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.app_id = app_id
-        self.app_key = app_key
-        self.tenant_id = tenant_id
-        self.access_token = access_token
+        Args:
+            credential_path: Takes "path/as/a/string" in order to verify them through
+                servicetitan endpoint.
 
-    # Connect method takes credentials and creates a connection token in order to request from other API sources
-    def Connect(self, cred_path):
-
+        """
         from Titanpy.connect import load_credentials
 
-        credentials = load_credentials(cred_path)
+        self.credential_path = credential_path
+        credentials = load_credentials(self.credential_path)
+        self.set_credentials(credentials["CLIENT_ID"],
+                            credentials["CLIENT_SECRET"],
+                            credentials["APP_ID"],
+                            credentials["APP_KEY"],
+                            credentials["TENANT_ID"],
+                            credentials["TIMEZONE"],
+                            credentials["ACCESS_TOKEN"],
+                            credentials
+                            )
 
-        self.client_id = credentials["CLIENT_ID"]
-        self.client_secret = credentials["CLIENT_SECRET"]
-        self.app_id = credentials["APP_ID"]
-        self.app_key = credentials["APP_KEY"]
-        self.tenant_id = credentials["TENANT_ID"]
-        self.timezone = credentials["TIMEZONE"]
-        self.access_token = credentials["ACCESS_TOKEN"]
-        self.credentials = credentials
+    def set_credentials(self, 
+                    client_id, 
+                    client_secret, 
+                    app_id, app_key, 
+                    tenant_id, 
+                    timezone,
+                    access_token,
+                    credentials
+        ):
+            """Setter for Servicetitan credentials."""
+
+            self.client_id = client_id
+            self.client_secret = client_secret
+            self.app_id = app_id
+            self.app_key = app_key
+            self.tenant_id = tenant_id
+            self.timezone = timezone
+            self.access_token = access_token
+            self.credentials = credentials
 
     # Returns data from a source.
     # Use Connect() before using API methods.
@@ -77,3 +109,5 @@ class Titanpy:
 
         else:
             print("This method has not been coded yet. See https://github.com/pabboat/Titanpy for more information.")
+
+

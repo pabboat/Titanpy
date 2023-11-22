@@ -20,7 +20,7 @@ def get_request(credentials, query, url):
         print(f"There was an error getting data from {url}")
         print(e)
 
-def get(credentials, endpoint, query, id, category, *args, **kwargs):
+def get(credentials, endpoint, query, id, category):
 
     general_urls = {
         "url": "https://api.servicetitan.io/",
