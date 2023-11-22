@@ -5,8 +5,7 @@ Connect() and Get() methods function properly.
 
 Typical usage example:
 
-    tp = Titanpy()
-    tp.Connect("credential/path/string")
+    tp = Titanpy("credential/path/string")
     data = tp.Get("endpoint", {query})
 
 Methods:

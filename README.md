@@ -21,8 +21,7 @@ Titanpy was heavily inspired by [ServicePytan](https://github.com/elliotpalmer/s
 ```
 from Titanpy import Titanpy
 
-tp = Titanpy.Titanpy()
-tp.Connect(cred_path)
+tp = Titanpy("path/to/credentials")
 tp.Get(endpoint, query, id, category, url)
 ```
 
